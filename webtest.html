@@ -52,8 +52,58 @@
 		var ballradius=10;
 		var color = "#ffffff";
 		
+		var brickrowcount =3;
+		var brickcloumncount = 5;
+		var brickwidth=75;
+		var brickheight=20;
+		var brickpadding=10;
+		var brickoffsettop=30;
+		var brickoffsetleft=30;
+		var bricks =[];
+		for(let i=0;i<brickcloumncount;i++){
+			bricks[i] =[];
+			for(let j=0;j<brickrowcount;j++){
+				bricks[i][j] ={x:0,y:0,status:1}
+			}
+		} //歸零
+		
 		document.addEventListener("keydown",keyDownHandler,false);
 		document.addEventListener("keyup",keyUpHandler,false);
+		
+		function collision(){
+			for(let i=0;i<brickcloumncount;i++){
+				for(let j=0;j<brickrowcount;j++){
+					var b =bricks[i][j];
+					if(b.status==1){
+						if(x >b.x && x<b.x+brickwidth &&y>b.y&&y<b.y+brickheight){
+							dy =-dy;
+							b.status=0;
+							if(dy >0) dy+=0.1;
+							if (dx>0) dx+=0.1;
+							if(dy <0) dy-=0.1;
+							if(dx <0) dx -=0.1;
+						}
+					}
+				}
+			}
+		}
+		
+		function drawbricks(){
+			for(let i=0;i<brickcloumncount;i++){
+				for(let j=0;j<brickrowcount;j++){
+					if(!bricks[i][j].status) continue;
+					var brickx =(i*(brickwidth+brickpadding))+brickoffsetleft;
+					var bricky =(j*(brickheight+brickpadding))+brickoffsettop;
+					bricks[i][j].x =brickx;
+					bricks[i][j].y =bricky;
+					ctx.beginPath();
+					ctx.rect(brickx,bricky,brickwidth,brickheight);
+					ctx.fillstyle = "red";
+					ctx.fill();
+					ctx.closePath();
+				}
+			}
+		}
 		
 		function keyDownHandler(e){
 			
@@ -87,10 +137,10 @@
 			else if(y+dy>canvas.height-ballradius){
 				if(x>paddlex && x<paddlex+paddlewidth){
 					dy = -dy;
-					if(dy >0) dy++;
+					/*if(dy >0) dy++;
 					if (dx>0) dx++;
 					if(dy <0) dy--;
-					if(dx <0) dx --;
+					if(dx <0) dx --;*/
 				}
 				else {
 					alert("game over");
@@ -101,9 +151,11 @@
 				dx = -dx;
 				color =get_random_color();
 			}
+			collision();
 			ctx.clearRect(0,0,canvas.width,canvas.height);
 			drawball();
 			drawpaddle();
+			drawbricks();
 			/*for(let i=0;i<=2;i++){
 				color[i] = Math.floor(Math.random()*256);
 			}*/
