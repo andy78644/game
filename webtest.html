@@ -35,8 +35,8 @@
 		ctx.rect(160, 10, 100, 40);
 		ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
 		ctx.stroke();
-		ctx.closePath();
-		*/
+		ctx.closePath();*/
+		
 		var paddlewidth = 75;
 		var paddleheight =10;
 		var paddlex = (canvas.width-paddlewidth)/2;
@@ -50,7 +50,7 @@
 		var dx = 1;
 		var dy = -1;
 		var ballradius=10;
-		var color = "#ffffff";
+		var color = "red";
 		
 		var brickrowcount =3;
 		var brickcloumncount = 5;
@@ -66,9 +66,33 @@
 				bricks[i][j] ={x:0,y:0,status:1}
 			}
 		} //歸零
+		var score=0;
+		var lives=3;
 		
 		document.addEventListener("keydown",keyDownHandler,false);
 		document.addEventListener("keyup",keyUpHandler,false);
+		document.addEventListener("mousemove",mousemovehandler,false);
+		
+		function mousemovehandler(e){
+			var relativex =e.clientX-canvas.offsetLeft;
+			if(relativex >0 && relativex<canvas.width){
+				paddlex=relativex-paddlewidth/2;
+			}
+		}
+		
+		function drawlives(){
+			ctx.fillstyle="red";
+			ctx.font="16px Arial";
+			
+			ctx.fillText("lives: "+lives,480-60	,20);
+		}
+		
+		
+		function drawscore(){
+			ctx.font ="16px Arial";
+			ctx.fillstyle =  "red";
+			ctx.fillText("score: "+score,8,20);
+		}
 		
 		function collision(){
 			for(let i=0;i<brickcloumncount;i++){
@@ -82,6 +106,11 @@
 							if (dx>0) dx+=0.1;
 							if(dy <0) dy-=0.1;
 							if(dx <0) dx -=0.1;
+							score++;
+							if(score==brickcloumncount*brickrowcount){
+								alert("you are win");
+								document.location.reload();
+							}
 						}
 					}
 				}
@@ -132,7 +161,7 @@
 			
 			if(y+dy<ballradius){
 				dy = -dy;
-				color =get_random_color();
+				//color =get_random_color();
 			}
 			else if(y+dy>canvas.height-ballradius){
 				if(x>paddlex && x<paddlex+paddlewidth){
@@ -143,48 +172,62 @@
 					if(dx <0) dx --;*/
 				}
 				else {
-					alert("game over");
-					document.location.reload();
-			    }
+					lives--;
+					if(lives==0){
+						alert("game over");
+						document.location.reload();
+					}
+					else{
+						x=canvas.width/2;
+						y = canvas.height-30;
+						dx = 1;
+						dy = -1;
+						paddlex=(canvas.width-paddlewidth)/2
+					}
+				}
 			}
 			if(x+dx <ballradius || x+dx >canvas.width-ballradius){
 				dx = -dx;
-				color =get_random_color();
+				//color =get_random_color();
 			}
 			collision();
 			ctx.clearRect(0,0,canvas.width,canvas.height);
 			drawball();
 			drawpaddle();
 			drawbricks();
+			drawscore();
+			drawlives();
 			/*for(let i=0;i<=2;i++){
 				color[i] = Math.floor(Math.random()*256);
 			}*/
 			
 			x += dx;
-			y += dy
+			y += dy;
+			requestAnimationFrame(draw);
 		}
 		function drawball(){
 			
 			ctx.beginPath();
 			ctx.arc(x,y,10,0,Math.PI*2);
-			ctx.fillStyle=  color;
+			ctx.fillStyle=  "red";
 			ctx.fill();
 			ctx.closePath();
 		}
-		function get_random_color()
+		/*function get_random_color()
 		{
 			return '#' + Math.random().toString(16).substring(4);
-		}
+		}*/
 		function drawpaddle(){
 			ctx.beginPath();
 			ctx.rect(paddlex,canvas.height-paddleheight,paddlewidth,paddleheight);
-			ctx.fillstyle = "purple";
+			ctx.fillstyle = "#0095DD";
 			ctx.fill();
 			ctx.closePath();
 			
 			
 		}
-		setInterval(draw,10);
+		draw();
+		//setInterval(draw,10);
 		
 	</script>
 
