@@ -35,8 +35,8 @@
 		ctx.rect(160, 10, 100, 40);
 		ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
 		ctx.stroke();
-		ctx.closePath();*/
-		
+		ctx.closePath();
+		*/
 		var paddlewidth = 75;
 		var paddleheight =10;
 		var paddlex = (canvas.width-paddlewidth)/2;
@@ -81,7 +81,7 @@
 		}
 		
 		function drawlives(){
-			ctx.fillstyle="red";
+			ctx.fillStyle="blue";
 			ctx.font="16px Arial";
 			
 			ctx.fillText("lives: "+lives,480-60	,20);
@@ -90,7 +90,7 @@
 		
 		function drawscore(){
 			ctx.font ="16px Arial";
-			ctx.fillstyle =  "red";
+			ctx.fillStyle=  "blue";
 			ctx.fillText("score: "+score,8,20);
 		}
 		
@@ -127,7 +127,7 @@
 					bricks[i][j].y =bricky;
 					ctx.beginPath();
 					ctx.rect(brickx,bricky,brickwidth,brickheight);
-					ctx.fillstyle = "red";
+					ctx.fillStyle = "red";
 					ctx.fill();
 					ctx.closePath();
 				}
@@ -192,11 +192,12 @@
 			}
 			collision();
 			ctx.clearRect(0,0,canvas.width,canvas.height);
-			drawball();
+			
 			drawpaddle();
 			drawbricks();
 			drawscore();
 			drawlives();
+			drawball();
 			/*for(let i=0;i<=2;i++){
 				color[i] = Math.floor(Math.random()*256);
 			}*/
@@ -208,10 +209,11 @@
 		function drawball(){
 			
 			ctx.beginPath();
-			ctx.arc(x,y,10,0,Math.PI*2);
-			ctx.fillStyle=  "red";
+			ctx.arc(x,y,10,0,Math.PI*2,false);
+			ctx.fillStyle=  "black";
 			ctx.fill();
 			ctx.closePath();
+			
 		}
 		/*function get_random_color()
 		{
@@ -220,7 +222,7 @@
 		function drawpaddle(){
 			ctx.beginPath();
 			ctx.rect(paddlex,canvas.height-paddleheight,paddlewidth,paddleheight);
-			ctx.fillstyle = "#0095DD";
+			ctx.fillStyle = "purple";
 			ctx.fill();
 			ctx.closePath();
 			
